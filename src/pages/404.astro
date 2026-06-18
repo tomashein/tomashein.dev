@@ -1,0 +1,88 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOCALE_DEFAULT, LOCALE_LIST } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import Page from '@layouts/Page.astro';
+
+const t = useTranslation(LOCALE_DEFAULT).error.notFound;
+
+const translations = Object.fromEntries(
+  LOCALE_LIST.map((locale) => {
+    const error = useTranslation(locale).error.notFound;
+    return [locale, { ...error }];
+  }),
+);
+---
+
+<Page title={t.title} description={t.message} noindex>
+  <div class="wrapper">
+    <main aria-labelledby="error-code">
+      <h1 id="error-code" aria-label={`${t.code} | ${t.title}`}>{t.code}</h1>
+      <div>
+        {LOCALE_LIST.map((locale) => <p lang={locale}>{translations[locale].message}</p>)}
+      </div>
+      <nav>
+        {
+          LOCALE_LIST.map((locale) => (
+            <span lang={locale}>
+              <a href={getRelativeLocaleUrl(locale, '/')}>{translations[locale].home}</a>
+            </span>
+          ))
+        }
+      </nav>
+    </main>
+  </div>
+</Page>
+
+<style>
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 48px 24px;
+  }
+  h1 {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  main > div {
+    color: var(--color-secondary);
+    text-align: center;
+  }
+  p {
+    line-height: 24px;
+  }
+  nav {
+    display: flex;
+    margin-top: 36px;
+    gap: 2px;
+  }
+  span {
+    &:first-child a {
+      border-radius: 6px 0 0 0;
+    }
+    &:last-child a {
+      border-radius: 0 0 6px 0;
+    }
+  }
+  a {
+    background-color: var(--color-primary);
+    corner-shape: bevel;
+    padding: 6px 8px;
+  }
+  @media (min-width: 1024px) {
+    a {
+      background-color: color-mix(in srgb, var(--color-primary), black 25%);
+      padding: 8px 18px;
+      transition-property: background-color;
+      transition-duration: 0.2s;
+      &:hover {
+        background-color: var(--color-primary);
+      }
+    }
+  }
+</style>

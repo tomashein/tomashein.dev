@@ -1,0 +1,179 @@
+---
+import { Icon } from 'astro-icon/components';
+import { MAIL_KEY, type Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+
+const t = useTranslation(Astro.currentLocale as Locale).contact;
+---
+
+<dialog id="contact" aria-labelledby="contact-title" aria-describedby="contact-desc">
+  <header>
+    <h3 id="contact-title">{t.title}</h3>
+    <button commandfor="contact" command="close" type="button" class="close" aria-label={t.closeLabel}>
+      <Icon name="mdi:close" aria-hidden="true" />
+    </button>
+  </header>
+  <p id="contact-desc">{t.description}</p>
+  <form>
+    <input type="hidden" name="apiKey" value={MAIL_KEY} />
+    <label class="visually-hidden" for="contact-name">{t.name}</label>
+    <div class="input">
+      <Icon name="mdi:user" aria-hidden="true" />
+      <input id="contact-name" type="text" name="name" required placeholder={t.name} autocomplete="name" />
+    </div>
+    <label class="visually-hidden" for="contact-email">{t.email}</label>
+    <div class="input">
+      <Icon name="mdi:email" aria-hidden="true" />
+      <input id="contact-email" type="email" name="email" required placeholder={t.email} autocomplete="email" />
+    </div>
+    <label class="visually-hidden" for="contact-subject">{t.subject}</label>
+    <div class="input">
+      <Icon name="mdi:text-subject" aria-hidden="true" />
+      <input id="contact-subject" type="text" name="subject" placeholder={t.subject} autocomplete="off" />
+    </div>
+    <label class="visually-hidden" for="contact-message">{t.message}</label>
+    <div class="input">
+      <Icon name="mdi:message-text" aria-hidden="true" />
+      <textarea id="contact-message" name="message" required placeholder={t.message} rows="6" autocomplete="off"
+      ></textarea>
+    </div>
+    <p id="contact-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div class="actions">
+      <button type="submit">{t.submit}</button>
+      <button commandfor="contact" command="close" type="button">{t.close}</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+  import '@scripts/contact';
+</script>
+
+<style>
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  dialog {
+    background-color: var(--color-background);
+    border-radius: 24px 0 24px 0;
+    corner-shape: bevel;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 32px;
+    min-width: calc(100vw - 24px);
+  }
+  h3 {
+    color: var(--color-foreground);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 32px 0;
+  }
+  p {
+    color: var(--color-secondary);
+    margin-bottom: 32px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  .input {
+    display: flex;
+    align-items: top;
+    margin-bottom: 20px;
+    svg {
+      color: color-mix(in srgb, var(--color-primary), var(--color-background) 50%);
+      margin-top: 7px;
+      height: 18px;
+      width: 18px;
+      margin-right: 16px;
+      transition-duration: 0.2s;
+      transition-property: color;
+    }
+    &:focus-within svg {
+      color: var(--color-primary);
+    }
+  }
+  input,
+  textarea {
+    background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 5%);
+    color: var(--color-foreground);
+    flex-grow: 1;
+    font-size: 14px;
+    letter-spacing: 1px;
+    line-height: 20px;
+    padding: 8px 12px;
+    &:focus {
+      outline: 2px solid var(--color-primary);
+    }
+  }
+  .actions {
+    display: flex;
+    margin: 16px 0 32px 0;
+    gap: 4px;
+    button {
+      color: white;
+      corner-shape: bevel;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      padding: 6px;
+      transition-property: background-color;
+      transition-duration: 0.2s;
+      &:first-child {
+        background-color: color-mix(in srgb, var(--color-primary), black 25%);
+        border-top-left-radius: 12px;
+        flex-grow: 1;
+        &:hover {
+          background-color: var(--color-primary);
+        }
+      }
+      &:last-child {
+        background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 5%);
+        border-bottom-right-radius: 12px;
+        color: var(--color-foreground);
+        min-width: 120px;
+        width: 30%;
+        &:hover {
+          background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 10%);
+        }
+      }
+    }
+  }
+  .close {
+    position: absolute;
+    top: 27px;
+    right: 22px;
+    cursor: pointer;
+    color: color-mix(in srgb, var(--color-foreground), transparent 85%);
+    transition-duration: 0.2s;
+    transition-property: color;
+    padding: 6px;
+    > svg {
+      height: 20px;
+      width: 20px;
+    }
+    &:hover {
+      color: var(--color-foreground);
+    }
+  }
+  #contact-feedback {
+    color: var(--color-foreground);
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    margin-bottom: 4px;
+    &:empty {
+      display: none;
+    }
+  }
+  @media (min-width: 640px) {
+    dialog {
+      min-width: 480px;
+    }
+  }
+</style>

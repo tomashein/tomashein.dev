@@ -1,0 +1,79 @@
+---
+import { Font } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { type Locale, LOCALE_DEFAULT, LOCALE_LIST, META, THEME_DARK, THEME_LIGHT } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import themeInit from '@scripts/themeInit.js?raw';
+import '@styles/index.css';
+import LocaleBanner from '@components/LocaleBanner.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { currentLocale, props } = Astro;
+const { title, description, noindex } = props;
+
+const t = useTranslation(currentLocale as Locale);
+
+const localeUrls = Object.fromEntries(
+  LOCALE_LIST.map((locale) => [locale, `${META.website}${getRelativeLocaleUrl(locale, '/')}`]),
+) as Record<Locale, string>;
+
+const currentUrl = localeUrls[currentLocale as Locale];
+const defaultUrl = localeUrls[LOCALE_DEFAULT];
+const currentTitle = title ? `${title} | ${META.author}` : `${META.author} | ${t.meta.role}`;
+const currentDescription = description || t.meta.description;
+
+const jsonLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: META.author,
+  jobTitle: t.meta.role,
+  url: META.website,
+  description: t.meta.description,
+  knowsAbout: Object.values(t.skills).filter(Boolean),
+  sameAs: META.social.map((el) => el.url).filter(Boolean),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    url: META.website,
+    contactType: 'professional inquiries',
+  },
+};
+---
+
+<!doctype html>
+<html lang={currentLocale}>
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline set:html={themeInit} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content={THEME_LIGHT} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content={THEME_DARK} media="(prefers-color-scheme: dark)" />
+    <title>{currentTitle}</title>
+    <meta name="description" content={currentDescription} />
+    <meta name="author" content={META.author} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      !noindex && (
+        <>
+          <link rel="canonical" href={currentUrl} />
+          {LOCALE_LIST.map((locale) => (
+            <link rel="alternate" hreflang={locale} href={localeUrls[locale]} />
+          ))}
+          <link rel="alternate" hreflang="x-default" href={defaultUrl} />
+        </>
+      )
+    }
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
+    <Font cssVariable="--font-sans" />
+  </head>
+  <body>
+    {!noindex && <LocaleBanner />}
+    <slot />
+  </body>
+</html>

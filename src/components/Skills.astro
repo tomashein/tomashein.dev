@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import Section from '@layouts/Section.astro';
+
+const locale = Astro.currentLocale as Locale;
+
+const { id, title } = useTranslation(locale).section.skills;
+
+const skills = (
+  await getCollection('skills', ({ id }) => {
+    return id.startsWith(`${locale}/`);
+  })
+).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Section id={id} title={title}>
+  <div>
+    {
+      skills.map((skill) => (
+        <section>
+          <h4 id={skill.id}>{skill.data.title}</h4>
+          {skill.data.comment && <p>({skill.data.comment})</p>}
+          <dl aria-labelledby={skill.id}>
+            {skill.data.content.map((item) => (
+              <div>
+                <dt>{item.title}</dt>
+                <dd set:html={item.description} />
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  section {
+    margin-bottom: 48px;
+  }
+  h4 {
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 20px;
+  }
+  p {
+    color: var(--color-secondary);
+    font-size: 12px;
+    list-height: 18px;
+  }
+  dl {
+    margin-top: 12px;
+    > div {
+      margin-bottom: 8px;
+    }
+  }
+  dt {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+  dd {
+    color: var(--color-secondary);
+    font-size: 14px;
+    line-height: 20px;
+  }
+</style>

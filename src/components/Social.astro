@@ -1,0 +1,57 @@
+---
+import { Icon } from 'astro-icon/components';
+import { META, type Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+
+const t = useTranslation(Astro.currentLocale as Locale).social;
+---
+
+<ul aria-label={t.list}>
+  {
+    META.social.map((el) => (
+      <li>
+        <a class="github" href={el.url} target="_blank" title={el.title}>
+          <Icon name={el.icon} />
+        </a>
+      </li>
+    ))
+  }
+  <li>
+    <button command="show-modal" commandfor="contact" type="button" title={t.contact}>
+      <Icon name="mdi:email" />
+    </button>
+  </li>
+</ul>
+
+<style>
+  ul {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  }
+  a,
+  button {
+    color: var(--social-link);
+    display: flex;
+    cursor: pointer;
+    transition-property: color;
+    transition-duration: 0.2s;
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+  svg {
+    height: 28px;
+    width: 28px;
+  }
+  @media (min-width: 640px) {
+    ul {
+      width: auto;
+    }
+  }
+  @media (min-width: 1024px) {
+    ul {
+      width: auto;
+    }
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import Section from '@layouts/Section.astro';
+
+const { id, title, content } = useTranslation(Astro.currentLocale as Locale).section.profile;
+---
+
+<Section id={id} title={title}>
+  {content.map((p) => <p set:html={p} />)}
+</Section>
+
+<style>
+  section {
+    scroll-margin-top: 96px;
+  }
+  p {
+    color: var(--color-secondary);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    margin-bottom: 16px;
+    :global(strong) {
+      color: var(--color-foreground);
+      font-weight: 500;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+</style>

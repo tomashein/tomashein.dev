@@ -1,0 +1,37 @@
+@layer reset, base, utilities;
+
+@import './reset.css' layer(reset);
+@import './base.css' layer(base);
+@import './utilities.css' layer(utilities);
+
+:root[data-theme='light'] {
+  --color-primary: #2d80ce;
+  --color-secondary: #424a4e;
+  --color-background: white;
+  --color-foreground: black;
+  --navigation-text: var(--color-primary);
+  --navigation-icon: var(--color-foreground);
+  --navigation-text-opacity: 30%;
+  --social-link: var(--color-secondary);
+  --locale-selector-bg: #ebebeb;
+  --theme-selector-active: var(--color-primary);
+  --experience-skill: var(--color-primary);
+  --scroll-top-button: var(--color-secondary);
+  --scroll-top-icon: var(--color-background);
+}
+
+:root[data-theme='dark'] {
+  --color-primary: #45a5ff;
+  --color-secondary: #a0aab3;
+  --color-background: #161819;
+  --color-foreground: white;
+  --navigation-text: var(--color-foreground);
+  --navigation-icon: var(--color-primary);
+  --navigation-text-opacity: 75%;
+  --social-link: var(--color-foreground);
+  --locale-selector-bg: #222424;
+  --theme-selector-active: var(--color-foreground);
+  --experience-skill: #2d80ce;
+  --scroll-top-button: var(--color-foreground);
+  --scroll-top-icon: var(--color-foreground);
+}

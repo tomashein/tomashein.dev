@@ -1,0 +1,63 @@
+---
+import { LOCALE_DEFAULT, LOCALE_LIST } from '@config';
+import Experience from '@components/Experience.astro';
+import Featured from '@components/Featured.astro';
+import Footer from '@components/Footer.astro';
+import Header from '@components/Header.astro';
+import Profile from '@components/Profile.astro';
+import Skills from '@components/Skills.astro';
+import Contact from '@components/Contact.astro';
+import Page from '@layouts/Page.astro';
+
+export function getStaticPaths() {
+  return LOCALE_LIST.map((locale) => ({
+    params: {
+      locale: locale === LOCALE_DEFAULT ? undefined : locale,
+    },
+  }));
+}
+---
+
+<Page>
+  <div class="wrapper">
+    <Header />
+    <div class="container">
+      <main>
+        <Profile />
+        <Featured />
+        <Experience />
+        <Skills />
+      </main>
+      <Footer />
+    </div>
+  </div>
+  <Contact />
+</Page>
+
+<style>
+  .wrapper {
+    margin: 0 auto;
+    max-width: 1280px;
+    min-height: 100vh;
+    padding: 48px 24px;
+  }
+  .container {
+    padding-top: 96px;
+  }
+  @media (min-width: 768px) {
+    .wrapper {
+      padding: 64px 48px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrapper {
+      display: flex;
+      gap: 16px;
+      padding: 0 48px;
+    }
+    .container {
+      padding: 95px 0;
+      width: 52%;
+    }
+  }
+</style>

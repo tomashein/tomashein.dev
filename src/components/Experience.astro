@@ -1,0 +1,152 @@
+---
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+import type { Locale } from '@config';
+import { getExperienceDuration } from '@helpers/duration';
+import { useTranslation } from '@helpers/i18n';
+import Section from '@layouts/Section.astro';
+
+const locale = Astro.currentLocale as Locale;
+
+const t = useTranslation(locale);
+const section = t.section.experience;
+
+const jobs = (
+  await getCollection('jobs', ({ id }) => {
+    return id.startsWith(`${locale}/`);
+  })
+).sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
+---
+
+<Section id={section.id} title={section.title}>
+  <ul>
+    {
+      jobs.map((job) => {
+        const duration = getExperienceDuration(job.data.startDate, job.data.endDate, locale, t);
+
+        return (
+          <li>
+            <article>
+              <header>
+                <h4>{job.data.role}</h4>
+                <p>
+                  {job.data.company} · <span aria-label="Located in">{job.data.location}</span>
+                </p>
+                <div class="date">
+                  <time datetime={duration.startISO}>{duration.startYear}</time>
+                  <span>–</span>
+                  <time datetime={duration.endISO}>{duration.endYear}</time>
+                  <span aria-label={`${duration.startYear} to ${duration.endYear}, ${duration.ariaLabel}`}>
+                    / {duration.parts.join(', ')}
+                  </span>
+                </div>
+              </header>
+              <div>
+                {job.data.content.map((p) => (
+                  <p set:html={p} />
+                ))}
+                <ul>
+                  {job.data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          </li>
+        );
+      })
+    }
+    <li>
+      <article>
+        <header>
+          <h4>{section.early.title}</h4>
+          <p>{section.early.company} · <span>{section.early.location}</span></p>
+          <div>
+            {section.early.prior}
+            <time datetime="2016-12">2016</time>
+          </div>
+        </header>
+        <div>
+          <p>{section.early.content}</p>
+          <ul>
+            {section.early.tags.map((tag) => <li>{tag}</li>)}
+          </ul>
+        </div>
+      </article>
+    </li>
+    <li>
+      <a aria-label={section.link.label} href={`/${t.meta.cv}`} target="_blank" rel="noreferrer noopener">
+        {section.link.text}<Icon name="mdi:arrow-top-right" />
+      </a>
+    </li>
+  </ul>
+</Section>
+
+<style>
+  article {
+    margin-bottom: 48px;
+    header {
+      display: flex;
+      flex-direction: column;
+      p {
+        color: var(--color-primary);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+      div {
+        color: var(--color-secondary);
+        order: -1;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        opacity: 1;
+        span:last-child {
+          margin-left: 4px;
+          opacity: 0.5;
+        }
+      }
+    }
+    > div {
+      :global(p) {
+        color: var(--color-secondary);
+        font-size: 14px;
+        list-style: 20px;
+        margin-top: 8px;
+        :global(strong) {
+          color: var(--color-foreground);
+          font-weight: 500;
+        }
+      }
+    }
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    li {
+      background-color: var(--experience-skill);
+      border-radius: 5px 0 5px 0;
+      color: white;
+      corner-shape: bevel;
+      font-size: 12px;
+      padding: 2px 8px;
+    }
+  }
+  h4 {
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 8px;
+  }
+  a {
+    color: var(--color-foreground);
+    display: inline-flex;
+    font-weight: 600;
+    transition-duration: 0.2s;
+    transition-property: color;
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+</style>

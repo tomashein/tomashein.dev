@@ -1,0 +1,94 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOCALE_LIST, type Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import type { BannerTranslation } from '@scripts/localeBanner';
+
+const translations = Object.fromEntries(
+  LOCALE_LIST.map((locale) => {
+    const t = useTranslation(locale).locale;
+    return [
+      locale,
+      {
+        message: t.banner.message,
+        switchTo: t.banner.switchTo,
+        stayIn: t.banner.stayIn,
+        localeNames: t.name,
+      },
+    ];
+  }),
+) as Record<Locale, BannerTranslation>;
+---
+
+<aside data-locale-banner role="status">
+  <p></p>
+  {
+    LOCALE_LIST.map((locale) => (
+      <a data-locale={locale} href={getRelativeLocaleUrl(locale, '/')} hreflang={locale} lang={locale} hidden />
+    ))
+  }
+  <button type="button"></button>
+</aside>
+
+<script data-locale-translations type="application/json" set:html={JSON.stringify(translations)} />
+
+<script>
+  import '@scripts/localeBanner';
+</script>
+
+<style>
+  aside {
+    background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 10%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 17px;
+  }
+  p {
+    background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 5%);
+    color: var(--color-foreground);
+    text-align: center;
+    padding: 6px 12px;
+    width: 100%;
+  }
+  a {
+    background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 15%);
+  }
+  a,
+  button {
+    color: var(--color-foreground);
+    cursor: pointer;
+    flex-grow: 1;
+    text-align: center;
+    padding: 4px;
+    &:hover {
+      color: var(--color-foreground);
+    }
+  }
+  @media (min-width: 1024px) {
+    aside {
+      background-color: color-mix(in srgb, var(--color-background), var(--color-foreground) 5%);
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+    }
+    p {
+      background-color: unset;
+      width: auto;
+    }
+    a,
+    button {
+      background-color: unset;
+      color: var(--color-secondary);
+      display: flex;
+      flex-grow: unset;
+      padding: 8px 12px;
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+</style>

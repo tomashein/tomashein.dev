@@ -1,0 +1,29 @@
+---
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+
+const t = useTranslation(Astro.currentLocale as Locale).meta;
+---
+
+<footer>
+  <p set:html={t.footer} />
+</footer>
+
+<style>
+  footer {
+    max-width: 448px;
+    :global(p) {
+      color: var(--color-secondary);
+      font-size: 14px;
+      line-height: 20px;
+    }
+    :global(a) {
+      color: var(--color-foreground);
+      transition-property: color;
+      transition-duration: 0.2s;
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+</style>

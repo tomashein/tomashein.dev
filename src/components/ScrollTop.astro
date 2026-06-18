@@ -1,0 +1,51 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+
+const t = useTranslation(Astro.currentLocale as Locale).navigation;
+---
+
+<button data-scroll-top hidden aria-label={t.scrollTop}>
+  <Icon name="mdi:arrow-up-bold-hexagon-outline" aria-hidden="true" />
+</button>
+
+<script>
+  import '@scripts/scrollTop';
+</script>
+
+<style>
+  button[hidden] {
+    display: none;
+  }
+  button {
+    background-color: var(--color-primary);
+    border-radius: 50% / 25%;
+    corner-shape: bevel;
+    cursor: pointer;
+    color: var(--scroll-top-icon);
+    padding: 2px 1px;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    svg {
+      height: 28px;
+      width: 28px;
+    }
+  }
+  @media (min-width: 1024px) {
+    button {
+      color: var(--scroll-top-button);
+      background-color: unset;
+      position: absolute;
+      bottom: 96px;
+      right: 16px;
+      padding: 2px;
+      transition-duration: 0.2s;
+      transition-property: color;
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+</style>

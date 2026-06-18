@@ -1,0 +1,62 @@
+---
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import { Icon } from 'astro-icon/components';
+
+const t = useTranslation(Astro.currentLocale as Locale).theme;
+---
+
+<div role="group" aria-label={t.group}>
+  <button type="button" data-theme-preference="light" aria-pressed="false" aria-label={t.light}>
+    <Icon aria-hidden="true" focusable="true" name="ic:outline-light-mode" />
+  </button>
+  <button type="button" data-theme-preference="dark" aria-pressed="false" aria-label={t.dark}>
+    <Icon aria-hidden="true" focusable="false" name="ic:outline-dark-mode" />
+  </button>
+  <button type="button" data-theme-preference="system" aria-pressed="false" aria-label={t.system}>
+    <Icon aria-hidden="true" focusable="false" name="ic:outline-desktop-mac" />
+  </button>
+</div>
+
+<script>
+  import '@scripts/themeSelector';
+</script>
+
+<style>
+  div {
+    background-color: color-mix(in srgb, var(--color-background), white 5%);
+    border-radius: 8px;
+    display: inline-flex;
+    gap: 8px;
+    padding: 4px 8px;
+  }
+  button {
+    color: var(--color-secondary);
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 4px;
+    transition-duration: 0.2s;
+    transition-property: color;
+  }
+  button[aria-pressed='true'] {
+    color: var(--theme-selector-active);
+    cursor: default;
+  }
+  button:hover:not([aria-pressed='true']) {
+    color: var(--color-primary);
+  }
+  svg {
+    height: 22px;
+    width: 22px;
+  }
+  @media (min-width: 1024px) {
+    div {
+      gap: 6px;
+      padding: 3px 8px;
+    }
+    svg {
+      height: 16px;
+      width: 16px;
+    }
+  }
+</style>

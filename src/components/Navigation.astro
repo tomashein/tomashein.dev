@@ -1,0 +1,94 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+
+const { navigation, section } = useTranslation(Astro.currentLocale as Locale);
+
+const sections = [
+  {
+    id: section.profile.id,
+    title: section.profile.title,
+    icon: 'mdi:person-details-outline',
+  },
+  {
+    id: section.featured.id,
+    title: section.featured.title,
+    icon: 'mdi:rocket-launch-outline',
+  },
+  {
+    id: section.experience.id,
+    title: section.experience.title,
+    icon: 'mdi:briefcase-variant-outline',
+  },
+  {
+    id: section.skills.id,
+    title: section.skills.title,
+    icon: 'mdi:terminal',
+  },
+];
+---
+
+<nav aria-label={navigation.navLabel} data-nav>
+  <ul>
+    {
+      sections.map(({ id, title, icon }) => (
+        <li>
+          <a href={`#${id}`} data-nav-link>
+            <Icon name={icon} aria-hidden="true" />
+            <span>{title}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  import '@scripts/navigation';
+</script>
+
+<style>
+  nav {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    nav {
+      display: block;
+    }
+    ul {
+      margin-top: 64px;
+      width: max-content;
+    }
+    a {
+      color: color-mix(in srgb, transparent var(--navigation-text-opacity), var(--navigation-text));
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition-property: color;
+      transition-duration: 0.2s;
+      svg {
+        color: color-mix(in srgb, transparent 50%, var(--navigation-icon));
+        height: 16px;
+        width: 16px;
+      }
+      &:hover {
+        color: var(--navigation-text);
+        svg {
+          color: var(--navigation-icon);
+        }
+      }
+    }
+    .active {
+      color: var(--navigation-text);
+      svg {
+        color: var(--navigation-icon);
+      }
+    }
+  }
+</style>

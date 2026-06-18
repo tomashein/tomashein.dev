@@ -1,0 +1,63 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOCALE_LIST, LOCALE_CONFIG, type Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+
+const { currentLocale } = Astro;
+const t = useTranslation(currentLocale as Locale).locale.selector;
+---
+
+<ul aria-label={t.group}>
+  {
+    [...LOCALE_LIST].sort().map((locale) => (
+      <li>
+        <a
+          href={getRelativeLocaleUrl(locale, '/')}
+          hreflang={locale}
+          lang={locale}
+          data-locale={locale}
+          aria-current={locale === currentLocale ? 'page' : undefined}>
+          {LOCALE_CONFIG[locale]}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<script>
+  import '@scripts/localeSelector';
+</script>
+
+<style>
+  ul {
+    background-color: var(--locale-selector-bg);
+    border-radius: 8px;
+    display: flex;
+    gap: 16px;
+    padding: 7px 16px;
+  }
+  a {
+    color: var(--color-secondary);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 20px;
+    transition-duration: 0.2s;
+    transition-property: color;
+    &:hover {
+      color: var(--color-primary);
+    }
+    &[aria-current='page'] {
+      color: var(--color-foreground);
+      cursor: default;
+    }
+  }
+  @media (min-width: 1024px) {
+    ul {
+      padding: 3px 12px;
+    }
+    a {
+      font-size: 12px;
+      line-height: 16px;
+    }
+  }
+</style>

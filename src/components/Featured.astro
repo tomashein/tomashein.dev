@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@config';
+import { useTranslation } from '@helpers/i18n';
+import Section from '@layouts/Section.astro';
+
+const locale = Astro.currentLocale as Locale;
+
+const { id, title } = useTranslation(locale).section.featured;
+
+const projects = (
+  await getCollection('projects', ({ id }) => {
+    return id.startsWith(`${locale}/`);
+  })
+).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Section id={id} title={title}>
+  <ul>
+    {
+      projects.map((project) => (
+        <li>
+          <article>
+            <header>
+              <h3>{project.data.title}</h3>
+              <p>
+                <em>{project.data.subtitle}</em>
+              </p>
+            </header>
+            <div>
+              <p>{project.data.description}</p>
+              <dl>
+                {project.data.content.map((item) => (
+                  <div>
+                    <dt>{item.title}</dt>
+                    <dd set:html={item.description} />
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </article>
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+
+<style>
+  h3 {
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  p {
+    color: var(--color-secondary);
+    font-size: 14px;
+    line-height: 20px;
+  }
+  em {
+    color: var(--color-primary);
+    font-style: normal;
+    font-weight: 600;
+  }
+  li {
+    margin-bottom: 48px;
+  }
+  article {
+    header {
+      p {
+        margin-top: 6px;
+      }
+    }
+    > div {
+      p {
+        margin-top: 8px;
+      }
+    }
+  }
+  dl {
+    margin-top: 12px;
+    > div {
+      margin-bottom: 12px;
+    }
+  }
+  dt {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+  dd {
+    color: var(--color-secondary);
+    font-size: 14px;
+    line-height: 20px;
+    > :global(strong) {
+      color: var(--color-foreground);
+      font-weight: 500;
+    }
+  }
+</style>
