@@ -40,5 +40,6 @@ jobs:
           DEPLOY_KEY: ${{ secrets.VPS_SSH_KEY }}
           ARGS: '-avz --delete'
           SERVER_IP: ${{ secrets.VPS_IP }}
+          SERVER_PORT: ${{ secrets.VPS_PORT }}
           USERNAME: ${{ secrets.VPS_USER }}
           SERVER_DESTINATION: ${{ secrets.VPS_PATH }}
