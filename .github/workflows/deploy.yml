@@ -41,5 +41,6 @@ jobs:
           ARGS: '-avz --delete'
           SERVER_IP: ${{ secrets.VPS_IP }}
           SERVER_PORT: ${{ secrets.VPS_PORT }}
+          FOLDER: 'dist/'
           USERNAME: ${{ secrets.VPS_USER }}
           SERVER_DESTINATION: ${{ secrets.VPS_PATH }}
