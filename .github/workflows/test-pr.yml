@@ -18,8 +18,11 @@ jobs:
           node-version: '24'
           cache: 'yarn'
 
+      - name: Configure Yarn Engine Ignore
+        run: yarn config set ignore-engines true
+
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile --ignore-engines
+        run: yarn install --frozen-lockfile
 
       - name: Run Unit Tests
         run: yarn test:run
