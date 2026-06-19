@@ -89,14 +89,9 @@ const gtmID = import.meta.env.PUBLIC_GTM_ID;
   <body>
     {
       gtmID && (
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${gtmID}`}
-            height="0"
-            width="0"
-            style="display:none;visibility:hidden"
-          />
-        </noscript>
+        <noscript
+          set:html={`<iframe src="https://www.googletagmanager.com/ns.html?id=${gtmID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`}
+        />
       )
     }
     {!noindex && <LocaleBanner />}
