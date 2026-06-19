@@ -33,6 +33,7 @@ jobs:
         env:
           PUBLIC_MAIL_URL: ${{ vars.PUBLIC_MAIL_URL }}
           PUBLIC_MAIL_KEY: ${{ vars.PUBLIC_MAIL_KEY }}
+          PUBLIC_GTM_ID: ${{ vars.PUBLIC_GTM_ID }}
 
       - name: Deploy to CloudPanel VPS via rsync
         uses: AEnterprise/rsync-deploy@v1.0.2

@@ -42,6 +42,8 @@ const jsonLD = {
     contactType: 'professional inquiries',
   },
 };
+
+const gtmID = import.meta.env.PUBLIC_GTM_ID;
 ---
 
 <!doctype html>
@@ -70,9 +72,33 @@ const jsonLD = {
       )
     }
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
+    <script is:inline data-gtm-id={gtmID}>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        const f = d.getElementsByTagName(s)[0];
+        const j = d.createElement(s);
+        const dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', document.currentScript.getAttribute('data-gtm-id'));
+    </script>
     <Font cssVariable="--font-sans" />
   </head>
   <body>
+    {
+      gtmID && (
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${gtmID}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+          />
+        </noscript>
+      )
+    }
     {!noindex && <LocaleBanner />}
     <slot />
   </body>
